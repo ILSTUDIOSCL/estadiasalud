@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bombo - Distribuidora Mayorista</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-red: #b71c1c;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+        }
+
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--primary-red) !important;
+            letter-spacing: 1px;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(211, 47, 47, 0.9), rgba(183, 28, 28, 0.9)), url('https://images.unsplash.com/photo-1534939561126-755ecf1588b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .section-title {
+            color: var(--dark-red);
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-red);
+        }
+
+        .product-card {
+            border: none;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            transition: 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+
+        .btn-add {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            width: 100%;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+
+        .btn-add:hover {
+            background-color: var(--dark-red);
+            color: white;
+        }
+
+        .cart-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .cart-btn {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #000;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            z-index: 1000;
+            width: 65px;
+            height: 65px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            color: white;
+            background-color: #128c7e;
+        }
+
+        .footer {
+            background-color: #212121;
+            color: white;
+            padding: 50px 0;
+            margin-top: 50px;
+        }
+
+        .category-filter.active {
+            background-color: var(--primary-red) !important;
+            color: white !important;
+        }
+
+        .product-img {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">BOMBO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link fw-bold" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold" href="#catalogo">Catálogo</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold" href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-4">Bombo Mayorista</h1>
+            <p class="lead mb-5">Tu socio estratégico en abastecimiento. Calidad premium en carnes, mariscos y despensa para tu negocio.</p>
+            <a href="#catalogo" class="btn btn-light btn-lg px-5 py-3 fw-bold text-danger">Ver Catálogo</a>
+        </div>
+    </section>
+
+    <!-- Descripción -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="section-title text-start">Sobre Nosotros</h2>
+                    <p class="lead">En <strong>Bombo</strong>, nos especializamos en la distribución mayorista de productos alimenticios de alta calidad. Atendemos a restaurantes, hoteles y negocios locales con un compromiso inquebrantable con la frescura y la eficiencia en la entrega.</p>
+                    <p>Nuestra selección de carnes premium, productos del mar seleccionados y artículos de despensa básica están diseñados para optimizar la operación de tu cocina.</p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="p-4 border-start border-4 border-danger">
+                        <h4 class="text-danger fw-bold">Horario de Atención</h4>
+                        <p class="mb-1">Lunes a Viernes: 09:00 - 17:00</p>
+                        <p>Sábados: 09:00 - 14:00</p>
+                        <h4 class="text-danger fw-bold mt-4">Contacto Directo</h4>
+                        <p class="fs-5">+56 9 8804 1572</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catálogo -->
+    <section id="catalogo" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center">Nuestro Catálogo</h2>
+            
+            <!-- Filtros de Categoría -->
+            <div class="d-flex flex-wrap justify-content-center mb-5 gap-2" id="category-filters">
+                <button class="btn btn-outline-danger category-filter active" onclick="filterCategory('all', event)">Todos</button>
+                <button class="btn btn-outline-danger category-filter" onclick="filterCategory('carnes', event)">Carnes</button>
+                <button class="btn btn-outline-danger category-filter" onclick="filterCategory('mar', event)">Productos del Mar</button>
+                <button class="btn btn-outline-danger category-filter" onclick="filterCategory('aderezos', event)">Aderezos</button>
+                <button class="btn btn-outline-danger category-filter" onclick="filterCategory('despensa', event)">Despensa</button>
+                <button class="btn btn-outline-danger category-filter" onclick="filterCategory('verduras', event)">Papas y Verduras</button>
+            </div>
+
+            <!-- Grid de Productos -->
+            <div class="row" id="product-grid">
+                <!-- Los productos se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h3 class="text-danger fw-bold mb-4">BOMBO</h3>
+                    <p>Distribución mayorista de excelencia. Calidad que se nota en cada entrega.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-4">Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#inicio" class="text-white text-decoration-none">Inicio</a></li>
+                        <li><a href="#catalogo" class="text-white text-decoration-none">Catálogo</a></li>
+                        <li><a href="#contacto" class="text-white text-decoration-none">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-4">Contacto</h5>
+                    <p><i class="fas fa-phone me-2"></i> +56 9 8804 1572</p>
+                    <p><i class="fas fa-envelope me-2"></i> contacto@bombo.cl</p>
+                    <p><i class="fas fa-clock me-2"></i> Lun-Vie 09:00-17:00 | Sáb 09:00-14:00</p>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="text-center mt-4">
+                <p>&copy; 2026 Bombo Mayorista. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Carrito Flotante -->
+    <div class="cart-floating">
+        <button class="cart-btn" data-bs-toggle="modal" data-bs-target="#cart-modal">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge" id="cart-count">0</span>
+        </button>
+    </div>
+
+    <!-- WhatsApp Flotante -->
+    <a href="https://wa.me/56988041572?text=Hola,%20quisiera%20realizar%20una%20consulta." class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Modal Carrito -->
+    <div class="modal fade" id="cart-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-shopping-cart me-2"></i>Tu Pedido</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cart-items-container">
+                        <!-- Items del carrito -->
+                    </div>
+                    <div id="empty-cart-msg" class="text-center py-4">
+                        <i class="fas fa-shopping-basket fa-3x text-muted mb-3"></i>
+                        <p>Tu carrito está vacío</p>
+                    </div>
+                </div>
+                <div class="modal-footer flex-column align-items-stretch">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="fw-bold">Total estimado:</h5>
+                        <h5 class="fw-bold text-danger" id="cart-total">Solicitar Cotización</h5>
+                    </div>
+                    <button class="btn btn-success btn-lg fw-bold" onclick="sendWhatsAppOrder()">
+                        <i class="fab fa-whatsapp me-2"></i>Enviar Pedido por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const products = [
+            // Carnes
+            { id: 1, name: "Asiento", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, name: "Choclillo", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, name: "Filete", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, name: "Lomo Liso", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=500&q=80" },
+            { id: 5, name: "Huachalomo", category: "carnes", price: "Mayorista", img: "images/huachalomo.jpg" },
+            { id: 6, name: "Tapapecho", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?auto=format&fit=crop&w=500&q=80" },
+            { id: 7, name: "Lomo Vetado", category: "carnes", price: "Mayorista", img: "images/lomo_vetado.png" },
+            { id: 8, name: "Posta Rosada", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1594041680534-e8c8cdebd679?auto=format&fit=crop&w=500&q=80" },
+            { id: 9, name: "Punta Picana", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=500&q=80" },
+            { id: 10, name: "Sobrecostilla", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1588347785102-294427e90c31?auto=format&fit=crop&w=500&q=80" },
+            { id: 11, name: "Pollo Ganso", category: "carnes", price: "Mayorista", img: "https://images.unsplash.com/photo-1602489114441-e97b17591c9d?auto=format&fit=crop&w=500&q=80" },
+            
+            // Mar
+            { id: 12, name: "Filete de Salmón con Piel", category: "mar", price: "Mayorista", img: "images/salmon.jpg" },
+            { id: 13, name: "Camarón 36/40", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=500&q=80" },
+            { id: 14, name: "Calamar", category: "mar", price: "Mayorista", img: "images/calamar.jpg" },
+            { id: 15, name: "Camarón con Cáscara", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1559742811-822873691df8?auto=format&fit=crop&w=500&q=80" },
+            { id: 16, name: "Lomo de Atún", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1501595091296-3aa970afb3ff?auto=format&fit=crop&w=500&q=80" },
+            { id: 17, name: "Ostiones con Coral", category: "mar", price: "Mayorista", img: "images/ostiones_coral.jpg" },
+            { id: 26, name: "Pulpo Mediterráneo", category: "mar", price: "Mayorista", img: "images/pulpo.png" },
+            { id: 27, name: "Filete de Reineta", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=500&q=80" },
+            { id: 28, name: "Aros de Calamar", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=500&q=80" },
+            { id: 29, name: "Filete de Merluza", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1534604973900-c41ab4c5e036?auto=format&fit=crop&w=500&q=80" },
+            { id: 30, name: "Filete de Pangarius", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1501595091296-3aa970afb3ff?auto=format&fit=crop&w=500&q=80" },
+            { id: 31, name: "Surtido de Mariscos", category: "mar", price: "Mayorista", img: "https://images.unsplash.com/photo-1534422298391-e4f8c170db76?auto=format&fit=crop&w=500&q=80" },
+
+            // Aderezos
+            { id: 18, name: "Mayonesa Kraft", category: "aderezos", price: "Mayorista", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" },
+            { id: 19, name: "Ketchup Heinz", category: "aderezos", price: "Mayorista", img: "https://images.unsplash.com/photo-1585325701165-351af9ad665e?auto=format&fit=crop&w=500&q=80" },
+            { id: 20, name: "Mostaza", category: "aderezos", price: "Mayorista", img: "https://images.unsplash.com/photo-1534604973900-c41ab4c5e036?auto=format&fit=crop&w=500&q=80" },
+            { id: 32, name: "Sriracha 740 gr", category: "aderezos", price: "Mayorista", img: "images/sriracha.jpg" },
+            { id: 33, name: "Cheddar Cheese", category: "aderezos", price: "Mayorista", img: "https://images.unsplash.com/photo-1552767059-ce182ead6c1b?auto=format&fit=crop&w=500&q=80" },
+            { id: 34, name: "Cheez Whiz", category: "aderezos", price: "Mayorista", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" },
+            { id: 35, name: "Sweet Relish", category: "aderezos", price: "Mayorista", img: "images/pepinillos_heinz.jpg" },
+
+            // Papas y Verduras
+            { id: 36, name: "Farm Frites 7mm (2,5kg x 5un)", category: "verduras", price: "Mayorista", img: "images/farm_frites_7mm.jpg" },
+            { id: 37, name: "Farm Frites 10mm (2kg x 6un)", category: "verduras", price: "Mayorista", img: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?auto=format&fit=crop&w=500&q=80" },
+            { id: 38, name: "Farm Frites 12mm (2kg)", category: "verduras", price: "Mayorista", img: "https://images.unsplash.com/photo-1630384066255-442795596843?auto=format&fit=crop&w=500&q=80" },
+            { id: 39, name: "Choclo Desgranado", category: "verduras", price: "Mayorista", img: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=500&q=80" },
+            { id: 40, name: "Ensalada Jardinera", category: "verduras", price: "Mayorista", img: "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&w=500&q=80" },
+
+            // Despensa
+            { id: 41, name: "Maxi Frits 10lts", category: "despensa", price: "Mayorista", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
+            { id: 42, name: "Vinagre de Manzana 5lts", category: "despensa", price: "Mayorista", img: "https://images.unsplash.com/photo-1589733901241-5e554288044e?auto=format&fit=crop&w=500&q=80" },
+            { id: 43, name: "Pepinillos Heinz 740gr", category: "despensa", price: "Mayorista", img: "images/pepinillos_heinz.jpg" },
+            { id: 44, name: "Pizza Sauce Heinz 2.97kg", category: "despensa", price: "Mayorista", img: "images/pizza_sauce_heinz.jpg" },
+            { id: 45, name: "Aceite Gastronómico 10lts", category: "despensa", price: "Mayorista", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=500&q=80" },
+            { id: 22, name: "Huevos de Color x180", category: "despensa", price: "Mayorista", img: "https://images.unsplash.com/photo-1518569656558-012b8f330a33?auto=format&fit=crop&w=500&q=80" },
+            { id: 23, name: "Margarina", category: "despensa", price: "Mayorista", img: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        let cart = [];
+
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+            
+            filtered.forEach(p => {
+                grid.innerHTML += `
+                    <div class="col-6 col-md-4 col-lg-3 d-flex">
+                        <div class="product-card w-100">
+                            <img src="${p.img}" class="product-img w-100" alt="${p.name}" onerror="this.src='https://via.placeholder.com/500x300?text=${encodeURIComponent(p.name)}'">
+                            <div class="card-body text-center p-3 d-flex flex-column">
+                                <h6 class="fw-bold mb-1">${p.name}</h6>
+                                <p class="text-danger small fw-bold mb-3">${p.price}</p>
+                                <button class="btn-add" onclick="addToCart(${p.id})">
+                                    <i class="fas fa-plus me-2"></i>Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterCategory(cat, event) {
+            document.querySelectorAll('.category-filter').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(cat);
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const inCart = cart.find(item => item.id === id);
+            
+            if (inCart) {
+                inCart.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI();
+            
+            const badge = document.getElementById('cart-count');
+            badge.style.transform = 'scale(1.5)';
+            setTimeout(() => badge.style.transform = 'scale(1)', 200);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const count = document.getElementById('cart-count');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            
+            count.innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+            
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
+                container.innerHTML = cart.map(item => `
+                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                        <div class="d-flex align-items-center">
+                            <img src="${item.img}" width="50" height="50" class="rounded me-3" style="object-fit: cover;" onerror="this.src='https://via.placeholder.com/50x50'">
+                            <div>
+                                <h6 class="mb-0 fw-bold">${item.name}</h6>
+                                <small class="text-muted">Cantidad: ${item.qty}</small>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="changeQty(${item.id}, -1)">-</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="changeQty(${item.id}, 1)">+</button>
+                            <button class="btn btn-sm btn-link text-danger ms-2" onclick="removeItem(${item.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) removeItem(id);
+                else updateCartUI();
+            }
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                alert("Tu carrito está vacío");
+                return;
+            }
+            
+            let message = "Hola Bombo Mayorista! 👋 Quisiera realizar el siguiente pedido:\n\n";
+            cart.forEach(item => {
+                message += `• ${item.name} (x${item.qty})\n`;
+            });
+            message += "\nPor favor, confírmenme la disponibilidad y precios. ¡Gracias!";
+            
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/56988041572?text=${encoded}`, '_blank');
+        }
+
+        // Inicializar
+        renderProducts();
+    </script>
+</body>
+</html>
