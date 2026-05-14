@@ -874,15 +874,40 @@ async function loadResidents() {
 }
 
 async function saveResident(form) {
-  const payload = { ...form, institution_id: STATE.institutionId };
 
-  // [SUPABASE] Insertar residente:
-  const { data, error } = await sb.from('residents').insert([payload]).select();
+  console.log("USER:", STATE.user);
+  console.log("INSTITUTION ID:", STATE.institutionId);
+
+  const payload = {
+    ...form,
+    institution_id: STATE.institutionId
+  };
+
+  console.log("PAYLOAD:", payload);
+
+  const { data, error } = await sb
+    .from('residents')
+    .insert([payload])
+    .select();
+
+  console.log("ERROR:", error);
+  console.log("DATA:", data);
+
   if (error) throw error;
+
   const saved = data[0];
+
   STATE.residents.push(saved);
+
   STATE.payments[saved.id] = {};
-  MONTHS.forEach(m => { STATE.payments[saved.id][m] = { paid:false, supplies:false }; });
+
+  MONTHS.forEach(m => {
+    STATE.payments[saved.id][m] = {
+      paid:false,
+      supplies:false
+    };
+  });
+
   return saved;
 }
 
