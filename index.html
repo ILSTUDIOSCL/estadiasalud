@@ -851,128 +851,160 @@ function navTo(page) {
 }
 
 // ════════════════════════════════════════════════════════
-//  DATA — RESIDENTS
+//  DATA — RESIDENTS (LOCAL STORAGE)
 // ════════════════════════════════════════════════════════
-async function loadResidents() {
-  // [SUPABASE] Cargar residentes de la institución:
-  const { data, error } = await sb
-    .from('residents')
-    .select('*')
-    .eq('institution_id', STATE.institutionId)
-    .order('name');
 
-  if (!error && data) {
-    STATE.residents = data;
-    // Inicializar pagos para nuevos residentes
-    data.forEach(r => {
-      if (!STATE.payments[r.id]) {
-        STATE.payments[r.id] = {};
-        MONTHS.forEach(m => { STATE.payments[r.id][m] = { paid: false, supplies: false }; });
-      }
-    });
-  }
+async function loadResidents() {
+
+  const savedResidents = localStorage.getItem('eleam_residents');
+
+  STATE.residents = savedResidents
+    ? JSON.parse(savedResidents)
+    : [];
+
+  STATE.residents.forEach(r => {
+    if (!STATE.payments[r.id]) {
+      STATE.payments[r.id] = {};
+
+      MONTHS.forEach(m => {
+        STATE.payments[r.id][m] = {
+          paid:false,
+          supplies:false
+        };
+      });
+    }
+  });
 }
 
 async function saveResident(form) {
 
-  console.log("USER:", STATE.user);
-  console.log("INSTITUTION ID:", STATE.institutionId);
-
-  const payload = {
+  const resident = {
+    id: crypto.randomUUID(),
     ...form,
-    institution_id: STATE.institutionId
+    created_at: new Date().toISOString()
   };
 
-  console.log("PAYLOAD:", payload);
+  STATE.residents.push(resident);
 
-  const { data, error } = await sb
-    .from('residents')
-    .insert([payload])
-    .select();
+  localStorage.setItem(
+    'eleam_residents',
+    JSON.stringify(STATE.residents)
+  );
 
-  console.log("ERROR:", error);
-  console.log("DATA:", data);
-
-  if (error) throw error;
-
-  const saved = data[0];
-
-  STATE.residents.push(saved);
-
-  STATE.payments[saved.id] = {};
+  STATE.payments[resident.id] = {};
 
   MONTHS.forEach(m => {
-    STATE.payments[saved.id][m] = {
+    STATE.payments[resident.id][m] = {
       paid:false,
       supplies:false
     };
   });
 
-  return saved;
+  return resident;
 }
 
 async function updateResident(id, form) {
-  // [SUPABASE] Actualizar residente:
-  const { error } = await sb.from('residents').update(form).eq('id', id);
-  if (error) throw error;
-  STATE.residents = STATE.residents.map(r => r.id === id ? { ...r, ...form } : r);
-  if (STATE.currentResident?.id === id) STATE.currentResident = { ...STATE.currentResident, ...form };
+
+  STATE.residents = STATE.residents.map(r =>
+    r.id === id
+      ? { ...r, ...form }
+      : r
+  );
+
+  localStorage.setItem(
+    'eleam_residents',
+    JSON.stringify(STATE.residents)
+  );
+
+  if (STATE.currentResident?.id === id) {
+    STATE.currentResident = {
+      ...STATE.currentResident,
+      ...form
+    };
+  }
 }
 
 async function deactivateResident(id) {
-  // [SUPABASE] Soft delete (estado inactivo):
-  const { error } = await sb.from('residents').update({ status: 'inactive' }).eq('id', id);
-  if (error) throw error;
-  STATE.residents = STATE.residents.map(r => r.id === id ? { ...r, status:'inactive' } : r);
-}
 
-// ════════════════════════════════════════════════════════
-//  DATA — EVOLUTIONS
-// ════════════════════════════════════════════════════════
-async function loadEvolutions(residentId) {
-  if (STATE.evolutions[residentId]) return; // ya cargadas
+  STATE.residents = STATE.residents.map(r =>
+    r.id === id
+      ? { ...r, status:'inactive' }
+      : r
+  );
 
-  // [SUPABASE] Cargar evoluciones:
-  const { data, error } = await sb
-    .from('evolutions')
-    .select('*')
-    .eq('resident_id', residentId)
-    .order('created_at', { ascending: false });
-
-  STATE.evolutions[residentId] = (!error && data) ? data : [];
-}
-
-async function saveEvolution(residentId, professional, observation) {
-  const now = new Date();
-  const payload = {
-    resident_id: residentId,
-    institution_id: STATE.institutionId,
-    professional,
-    observation,
-    date: now.toLocaleDateString('es-CL'),
-    time: now.toLocaleTimeString('es-CL', { hour:'2-digit', minute:'2-digit' }),
-    created_at: now.toISOString(),
-    created_by: STATE.user?.email || '',
-  };
-
-  // [SUPABASE] Insertar evolución:
-  const { data, error } = await sb.from('evolutions').insert([payload]).select();
-  if (error) throw error;
-  const saved = data[0];
-  if (!STATE.evolutions[residentId]) STATE.evolutions[residentId] = [];
-  STATE.evolutions[residentId].unshift(saved);
-  return saved;
-}
-
-async function updateEvolution(id, residentId, newText) {
-  // [SUPABASE] Actualizar texto evolución (no eliminar):
-  const { error } = await sb.from('evolutions').update({ observation: newText, edited: true }).eq('id', id);
-  if (error) throw error;
-  STATE.evolutions[residentId] = STATE.evolutions[residentId].map(e =>
-    e.id === id ? { ...e, observation: newText, edited: true } : e
+  localStorage.setItem(
+    'eleam_residents',
+    JSON.stringify(STATE.residents)
   );
 }
 
+// ════════════════════════════════════════════════════════
+//  DATA — EVOLUTIONS (LOCAL STORAGE)
+// ════════════════════════════════════════════════════════
+
+async function loadEvolutions(residentId) {
+
+  const saved = localStorage.getItem('eleam_evolutions');
+
+  STATE.evolutions = saved
+    ? JSON.parse(saved)
+    : {};
+
+  if (!STATE.evolutions[residentId]) {
+    STATE.evolutions[residentId] = [];
+  }
+}
+
+async function saveEvolution(residentId, professional, observation) {
+
+  const now = new Date();
+
+  const evo = {
+    id: crypto.randomUUID(),
+    professional,
+    observation,
+    date: now.toLocaleDateString('es-CL'),
+    time: now.toLocaleTimeString('es-CL', {
+      hour:'2-digit',
+      minute:'2-digit'
+    }),
+    created_at: now.toISOString(),
+    created_by: STATE.user?.email || ''
+  };
+
+  if (!STATE.evolutions[residentId]) {
+    STATE.evolutions[residentId] = [];
+  }
+
+  STATE.evolutions[residentId].unshift(evo);
+
+  localStorage.setItem(
+    'eleam_evolutions',
+    JSON.stringify(STATE.evolutions)
+  );
+
+  return evo;
+}
+
+async function updateEvolution(id, residentId, newText) {
+
+  STATE.evolutions[residentId] =
+    STATE.evolutions[residentId].map(e =>
+      e.id === id
+        ? {
+            ...e,
+            observation:newText,
+            edited:true
+          }
+        : e
+    );
+
+  localStorage.setItem(
+    'eleam_evolutions',
+    JSON.stringify(STATE.evolutions)
+  );
+}
+     
 // ════════════════════════════════════════════════════════
 //  RENDER — DASHBOARD
 // ════════════════════════════════════════════════════════
