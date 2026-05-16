@@ -1422,9 +1422,9 @@ function renderDashboard() {
           </div>`
         : active.slice(0,5).map((r,i) => `
           <div style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:10px;background:#f9fafb;margin-bottom:8px">
-            <div class="resident-avatar" style="background:${avatarGrad(i)}">${initials(r.name)}</div>
+            <div class="resident-avatar" style="background:${avatarGrad(i)}">${initials(r.full_name)}</div>
             <div style="flex:1;min-width:0">
-              <div style="font-size:14px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.name}</div>
+              <div style="font-size:14px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.full_name}</div>
               <div style="font-size:12px;color:var(--muted)">${r.age} años · Ingreso ${fmtDate(r.entry)}</div>
             </div>
           </div>`).join('')}
@@ -1437,7 +1437,7 @@ function renderDashboard() {
 // ════════════════════════════════════════════════════════
 function renderResidentsList(query = '') {
   const active   = STATE.residents.filter(r => r.status !== 'inactive');
-  const filtered = query ? active.filter(r => r.name.toLowerCase().includes(query.toLowerCase())) : active;
+  const filtered = query ? active.filter(r => r.full_name.toLowerCase().includes(query.toLowerCase())) : active;
 
   $('page-residents').innerHTML = `
     <div style="display:flex;gap:12px;margin-bottom:24px">
@@ -1464,9 +1464,9 @@ function renderResidentsList(query = '') {
            ${filtered.map((r,i) => `
              <div class="table-row" style="grid-template-columns:1fr 70px 130px 170px 46px">
                <div style="display:flex;align-items:center;gap:14px" onclick="openResidentDetail('${r.id}')">
-                 <div class="resident-avatar" style="background:${avatarGrad(i)}">${initials(r.name)}</div>
+                 <div class="resident-avatar" style="background:${avatarGrad(i)}">${initials(r.full_name)}</div>
                  <div>
-                   <div class="resident-name">${r.name}</div>
+                   <div class="resident-name">${r.full_name}</div>
                    <div class="resident-diag">${r.diagnosis?.split(',')[0] || 'Sin diagnóstico'}</div>
                  </div>
                </div>
@@ -1478,7 +1478,7 @@ function renderResidentsList(query = '') {
                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
                  </span>
                </div>
-               <button class="btn-icon" title="Desactivar" onclick="confirmDeactivate('${r.id}','${r.name.replace(/'/g,"\\'")}')">
+               <button class="btn-icon" title="Desactivar" onclick="confirmDeactivate('${r.id}','${r.full_name.replace(/'/g,"\\'")}')">
                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
                </button>
              </div>`).join('')}`}
@@ -1655,9 +1655,9 @@ function renderResidentDetail(editMode) {
 
     <div class="detail-header">
       <div style="display:flex;align-items:center;gap:16px">
-        <div class="detail-avatar">${initials(r.name)}</div>
+        <div class="detail-avatar">${initials(r.full_name)}</div>
         <div>
-          <div class="detail-name">${r.name}</div>
+          <div class="detail-name">${r.full_name}</div>
           <div class="detail-age">${r.age} años · Ingreso ${fmtDate(r.entry)}</div>
         </div>
       </div>
@@ -2036,7 +2036,7 @@ async function togglePayment(residentId, month, field) {
 // ════════════════════════════════════════════════════════
 function renderPaymentsList(query = '') {
   const active   = STATE.residents.filter(r => r.status !== 'inactive');
-  const filtered = query ? active.filter(r => r.name.toLowerCase().includes(query.toLowerCase())) : active;
+  const filtered = query ? active.filter(r => r.full_name.toLowerCase().includes(query.toLowerCase())) : active;
   const cm       = curMonth();
 
   $('page-payments').innerHTML = `
@@ -2058,9 +2058,9 @@ function renderPaymentsList(query = '') {
              return `
                <div class="table-row" style="grid-template-columns:1fr 130px 130px 50px" onclick="openPaymentDetail('${r.id}')">
                  <div style="display:flex;align-items:center;gap:12px">
-                   <div class="resident-avatar" style="background:${avatarGrad(i)};width:38px;height:38px;font-size:12px">${initials(r.name)}</div>
+                   <div class="resident-avatar" style="background:${avatarGrad(i)};width:38px;height:38px;font-size:12px">${initials(r.full_name)}</div>
                    <div>
-                     <div class="resident-name">${r.name}</div>
+                     <div class="resident-name">${r.full_name}</div>
                      <div class="resident-diag">${r.age} años</div>
                    </div>
                  </div>
@@ -2136,9 +2136,9 @@ function renderPaymentDetail() {
 
     <div style="background:linear-gradient(135deg,#059669,#0d9488);border-radius:16px;padding:24px 28px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
       <div style="display:flex;align-items:center;gap:16px">
-        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px">${initials(r.name)}</div>
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px">${initials(r.full_name)}</div>
         <div>
-          <h2 style="color:#fff;font-size:18px;font-weight:700;margin:0 0 4px">${r.name}</h2>
+          <h2 style="color:#fff;font-size:18px;font-weight:700;margin:0 0 4px">${r.full_name}</h2>
           <div style="color:rgba(255,255,255,.68);font-size:13px">Registro de pagos anual · ${new Date().getFullYear()}</div>
         </div>
       </div>
@@ -2309,7 +2309,7 @@ function openObsModal() {
         <label class="form-label">Asociar a residente (opcional)</label>
         <select id="obs-resident" class="form-input">
           <option value="">— Observación general —</option>
-          ${active.map(r => `<option value="${r.id}">${r.name}</option>`).join('')}
+          ${active.map(r => `<option value="${r.id}">${r.full_name}</option>`).join('')}
         </select>
       </div>
       <div class="form-group">
@@ -2470,7 +2470,7 @@ function renderVisits() {
           <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:10px">Filtrar por residente</div>
           <select class="form-input" onchange="STATE.visitFilterResident=this.value;renderVisits()">
             <option value="all" ${filterRes==='all'?'selected':''}>Todos los residentes</option>
-            ${active.map(r=>`<option value="${r.id}" ${filterRes===r.id?'selected':''}>${r.name}</option>`).join('')}
+            ${active.map(r=>`<option value="${r.id}" ${filterRes===r.id?'selected':''}>${r.full_name}</option>`).join('')}
           </select>
         </div>
       </div>
@@ -2535,7 +2535,7 @@ function openVisitModal(preDate) {
         <label class="form-label">Residente *</label>
         <select id="v-resident" class="form-input">
           <option value="">— Seleccionar residente —</option>
-          ${active.map(r=>`<option value="${r.id}">${r.name}</option>`).join('')}
+          ${active.map(r=>`<option value="${r.id}">${r.full_name}</option>`).join('')}
         </select>
       </div>
       <div class="form-group">
@@ -2754,8 +2754,8 @@ function renderRooms() {
                           const idx = STATE.residents.findIndex(x=>x.id===r.id);
                           return `<div class="room-resident-chip" draggable="true"
                             ondragstart="STATE.dragResidentId='${r.id}';STATE.dragFromRoomId='${room.id}';event.dataTransfer.effectAllowed='move'">
-                            <div class="resident-avatar" style="background:${avatarGrad(idx)};width:22px;height:22px;font-size:9px">${initials(r.name)}</div>
-                            <span>${r.name}</span>
+                            <div class="resident-avatar" style="background:${avatarGrad(idx)};width:22px;height:22px;font-size:9px">${initials(r.full_name)}</div>
+                            <span>${r.full_name}</span>
                             <button onclick="removeResidentFromRoom('${r.id}','${room.id}')" style="background:none;border:none;cursor:pointer;color:var(--muted);margin-left:auto;padding:0;display:flex;align-items:center" title="Quitar de habitación">
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                             </button>
@@ -2778,8 +2778,8 @@ function renderRooms() {
                 const idx = STATE.residents.findIndex(x=>x.id===r.id);
                 return `<div class="room-resident-chip" draggable="true" style="margin-bottom:6px"
                   ondragstart="STATE.dragResidentId='${r.id}';STATE.dragFromRoomId=null;event.dataTransfer.effectAllowed='move'">
-                  <div class="resident-avatar" style="background:${avatarGrad(idx)};width:22px;height:22px;font-size:9px">${initials(r.name)}</div>
-                  <span style="font-size:12px">${r.name}</span>
+                  <div class="resident-avatar" style="background:${avatarGrad(idx)};width:22px;height:22px;font-size:9px">${initials(r.full_name)}</div>
+                  <span style="font-size:12px">${r.full_name}</span>
                 </div>`;
               }).join('')}
         </div>
@@ -2881,7 +2881,7 @@ function openRoomAssignModal(roomId) {
         ${available.map(r=>{
           const currRoomId = roomsForResident(r.id);
           const currRoom = currRoomId ? STATE.rooms.find(x=>x.id===currRoomId) : null;
-          return `<option value="${r.id}">${r.name}${currRoom?' (actualmente en hab. '+currRoom.room_number+')':''}</option>`;
+          return `<option value="${r.id}">${r.full_name}${currRoom?' (actualmente en hab. '+currRoom.room_number+')':''}</option>`;
         }).join('')}
       </select>
     </div>
