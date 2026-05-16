@@ -1375,7 +1375,7 @@ function renderDashboard() {
           : recentObs.map(o => {
               const res = o.resident_id ? STATE.residents.find(r=>r.id===o.resident_id) : null;
               return `<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;margin-bottom:8px;border-left:3px solid ${o.priority==='urgent'?'#dc2626':o.priority==='important'?'#f59e0b':'#e5e7eb'}">
-                <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${o.obs_date} · ${o.obs_time} ${res?'· '+res.name:'· General'}</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${o.obs_date} · ${o.obs_time} ${res?'· '+res.full_name:'· General'}</div>
                 <div style="font-size:13px;color:#374151;line-height:1.5">${o.content}</div>
               </div>`;
             }).join('')}
