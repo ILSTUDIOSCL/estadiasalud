@@ -1202,7 +1202,7 @@ async function loadResidents() {
     .from('residents')
     .select('*')   // trae todas las columnas, incluyendo pago_realizado y utiles_entregados
     .eq('institution_id', STATE.institutionId)
-    .order('name');
+    .order('full_name');
 
   if (!error && data) {
     STATE.residents = data;
